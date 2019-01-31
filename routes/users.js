@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
 router.post('/register', function(req, res, next){
     var username = req.body.user_name;
     var password = req.body.password;
+    var email = req.body.email;
     // Check if account already exists
     User.findOne({ 'user_name' :  username }, function(err, user)
     {
@@ -37,6 +38,7 @@ router.post('/register', function(req, res, next){
             // set the user's local credentials
             newUser.user_name = username;
             newUser.password = newUser.generateHash(password);
+            newUser.email = email;
             newUser.access_token = createJwt({user_name:username});
             newUser.save(function(err, user) {
                 if (err)
@@ -83,9 +85,11 @@ router.post('/login', function(req, res, next){
 
 
 
+
+
 function createJwt(profile) {
     return jwt.sign(profile, 'CSIsTheWorst', {
-        expiresIn: '10d'
+        expiresIn: '2d'
     });
 }
 

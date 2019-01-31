@@ -11,11 +11,12 @@ $(document).ready(
                 dataType: 'json',
                 data: {
                     'user_name': event.target.inputUsername.value,
-                    'password': event.target.inputPassword.value
+                    'password': event.target.inputPassword.value,
+                    'email': event.target.inputEmail.value
                 },
                 success: function(token){
                     $(location).attr('href', '/feed' );
-		// Redirect to a login page
+                    // Redirect to a login page
                 },
                 error: function(errMsg) {
                     swal(
@@ -25,10 +26,12 @@ $(document).ready(
                     )
                 }
             });
-        }); });
+        }); 
+    });
+
 $(document).ready(
     function() {       
-$("#log-form").submit(function (event) {
+        $("#log-form").submit(function (event) {
             event.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -39,8 +42,8 @@ $("#log-form").submit(function (event) {
                     'password': event.target.inputPassword.value
                 },
                 success: function(token){
-                     $(location).attr('href', '/feed' );
-		  // Redirect to logged in page
+                    $(location).attr('href', '/feed' );
+                    // Redirect to logged in page
                 },
                 error: function(errMsg) {
                     swal(
@@ -50,5 +53,19 @@ $("#log-form").submit(function (event) {
                     )
                 }
             });
-        }); });
+        }); 
+    });
 
+
+
+
+
+    
+    
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+}
+    

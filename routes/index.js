@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Comment = require('../models/comments');
+var jwt = require('jsonwebtoken');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,27 +10,28 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.post('/addComment', function(req, res, next) {
-            comment = new Comment(req.body); // new Comment object 
-            comment.save(function (err, savedComment) { // Save function of th actual comment 
+router.get('/feed', function(req, res, next) {
 
-                if (err) // error handling 
-                    throw err;
-                res.json({
-                    "id": savedComment._id 
-                });
+    try {
+        var jwtString = req.cookies.Authorization.split(" ");
+        var profile = verifyJwt(jwtString[1]);
+        if (profile) {
+            res.render('feed');
+        }
+    }catch (err) {
+            res.json({
+                "status": "error",
+                "body": [
+                    "You are not logged in."
+                ]
             });
+        }
 });
 
-router.get('/getComments', function(req, res, next)
-{
-    Comment.find({}, function (err, comments) {
-
-        if (err)
-            res.send(err);
-        res.json(comments);
-    });
-});
+function verifyJwt(jwtString) {
+    var value = jwt.verify(jwtString, 'CSIsTheWorst');
+    return value;
+}
 
 
 module.exports = router;
